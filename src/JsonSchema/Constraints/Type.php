@@ -24,6 +24,11 @@ class Type extends Constraint
      */
     public function check($value = null, $schema = null, $path = null, $i = null)
     {
+        // hash -> object
+        if (is_array($value) && array_keys($value) != range(0, count($value) - 1)) {
+            $value = (object) $value;
+        }
+
         $type = isset($schema->type) ? $schema->type : null;
         $isValid = true;
 

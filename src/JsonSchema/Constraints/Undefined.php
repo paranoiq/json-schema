@@ -47,6 +47,11 @@ class Undefined extends Constraint
      */
     public function validateTypes($value, $schema = null, $path = null, $i = null)
     {
+        // hash -> object
+        if (is_array($value) && array_keys($value) != range(0, count($value) - 1)) {
+            $value = (object) $value;
+        }
+
         // check array
         if (is_array($value)) {
             $this->checkArray($value, $schema, $path, $i);
@@ -120,11 +125,11 @@ class Undefined extends Constraint
             }
         }
     }
-    
+
     protected function validateUri($schemaUri = null, $schema, $path = null, $i = null)
     {
         $resolver = new \JsonSchema\Uri\UriResolver();
-        
+
         if ($resolver->isValid($schemaUri)) {
             $schemaId = property_exists($schema, 'id') ? $schema->id : null;
             return $this->retrieveUri($resolver->resolve($schemaUri, $schemaId));

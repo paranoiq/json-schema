@@ -62,6 +62,10 @@ class Object extends Constraint
     public function validateElement($element, $objectDefinition = null, $path = null, $additionalProp = null)
     {
         foreach ($element as $i => $value) {
+            // hash -> object
+            if (is_array($element) && array_keys($element) != range(0, count($element) - 1)) {
+                $element = (object) $element;
+            }
 
             $property = $this->getProperty($element, $i, new Undefined());
             $definition = $this->getProperty($objectDefinition, $i);
